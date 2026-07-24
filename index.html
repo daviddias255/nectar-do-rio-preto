@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<!-- ===== EDITE AQUI: título da aba e descrição ===== -->
+<title>Néctar do Rio Preto — Mel de florada nativa</title>
+<meta name="description" content="Mel de florada nativa, puro e artesanal. Néctar do Rio Preto." />
+<meta property="og:title" content="Néctar do Rio Preto" />
+<meta property="og:description" content="Mel de florada nativa, puro e artesanal." />
+<meta property="og:image" content="mel-poster.jpg" />
+<meta property="og:type" content="website" />
+<meta name="theme-color" content="#140c04" />
+
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
+<link rel="apple-touch-icon" href="favicon-180.png" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,ital,wght@9..144,0,400;9..144,0,500;9..144,1,400&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+<style>
+  :root {
+    --escuro:      #140c04;
+    --escuro-2:    #23150a;
+    --mel:         #f0a91a;
+    --mel-claro:   #ffd166;
+    --mel-fundo:   #b8710a;
+    --creme:       #fbf3e0;
+    --creme-suave: #e9dcc2;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; }
+
+  body {
+    font-family: 'Manrope', system-ui, sans-serif;
+    background: var(--escuro);
+    color: var(--creme);
+    min-height: 100dvh;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ===== Fundo: vídeo do mel ===== */
+  .fundo-video {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -2;
+    filter: brightness(.52) saturate(1.15) contrast(1.05);
+  }
+
+  /* Reserva em CSS: antes do vídeo carregar ou se ele falhar */
+  .fundo-reserva {
+    position: fixed;
+    inset: 0;
+    z-index: -3;
+    background:
+      radial-gradient(60% 55% at 25% 20%, rgba(240,169,26,.45), transparent 60%),
+      radial-gradient(70% 60% at 70% 85%, rgba(184,113,10,.5), transparent 65%),
+      linear-gradient(160deg, var(--escuro-2), var(--escuro));
+  }
+
+  /* Véu que garante contraste do texto sobre o vídeo */
+  .fundo-veu {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+      linear-gradient(100deg, rgba(10,6,2,.88) 0%, rgba(10,6,2,.62) 42%, rgba(10,6,2,.25) 75%),
+      linear-gradient(180deg, rgba(10,6,2,.55), transparent 30%, rgba(10,6,2,.6));
+  }
+
+  /* ===== Conteúdo ===== */
+  .cartao {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1.3rem;
+    padding: 4rem clamp(1.5rem, 7vw, 6rem);
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ===== Logo (selo) ===== */
+  .selo-logo {
+    width: clamp(78px, 9vw, 108px);
+    height: auto;
+    display: block;
+    /* brilho suave de mel ao redor, para o selo não parecer colado */
+    filter: drop-shadow(0 6px 22px rgba(0,0,0,.55))
+            drop-shadow(0 0 26px rgba(240,169,26,.28));
+    opacity: 0;
+    animation: surgir 1s ease-out .15s forwards;
+  }
+
+  .selo {
+    font-size: .7rem;
+    letter-spacing: .42em;
+    text-transform: uppercase;
+    color: var(--mel-claro);
+    font-weight: 600;
+    opacity: 0;
+    animation: surgir .9s ease-out .3s forwards;
+  }
+
+  /* Nome empilhado, como no rótulo */
+  .marca {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: clamp(2.7rem, 8.5vw, 5.6rem);
+    line-height: .95;
+    letter-spacing: -0.015em;
+    background: linear-gradient(170deg, var(--creme) 25%, var(--mel-claro) 115%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    opacity: 0;
+    animation: surgir 1s ease-out .45s forwards;
+  }
+  .marca .conector {
+    display: block;
+    font-style: italic;
+    font-weight: 400;
+    font-size: .38em;
+    letter-spacing: .04em;
+    margin: .12em 0 .04em;
+  }
+
+  .lema {
+    font-size: clamp(1rem, 2.6vw, 1.2rem);
+    max-width: 34ch;
+    color: var(--creme-suave);
+    line-height: 1.55;
+    opacity: 0;
+    animation: surgir 1s ease-out .65s forwards;
+  }
+
+  .divisor {
+    width: 52px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--mel), transparent);
+    margin: .35rem 0;
+    opacity: 0;
+    animation: surgir 1s ease-out .8s forwards;
+  }
+
+  .acoes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .75rem;
+    margin-top: .5rem;
+    opacity: 0;
+    animation: surgir 1s ease-out .95s forwards;
+  }
+
+  .botao {
+    display: inline-flex;
+    align-items: center;
+    gap: .55rem;
+    padding: .85rem 1.5rem;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: .97rem;
+    text-decoration: none;
+    transition: transform .18s ease, box-shadow .18s ease, background .18s ease, border-color .18s ease;
+  }
+  .botao svg { width: 20px; height: 20px; display: block; }
+
+  .botao-principal {
+    background: linear-gradient(180deg, var(--mel-claro), var(--mel));
+    color: #3a2405;
+    box-shadow: 0 8px 30px rgba(240,169,26,.3);
+  }
+  .botao-principal:hover { transform: translateY(-2px); box-shadow: 0 12px 36px rgba(240,169,26,.45); }
+
+  .botao-vazado {
+    background: rgba(255,255,255,.07);
+    color: var(--creme);
+    border: 1px solid rgba(255,209,102,.32);
+    backdrop-filter: blur(8px);
+  }
+  .botao-vazado:hover { transform: translateY(-2px); background: rgba(255,255,255,.14); border-color: var(--mel-claro); }
+
+  .botao:focus-visible { outline: 3px solid var(--mel-claro); outline-offset: 3px; }
+
+  .rodape {
+    position: relative;
+    z-index: 1;
+    padding: 1.5rem clamp(1.5rem, 7vw, 6rem);
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    font-size: .8rem;
+    color: rgba(233,220,194,.55);
+    letter-spacing: .04em;
+  }
+
+  @keyframes surgir {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* No celular o vídeo é cortado: centraliza tudo e reforça o véu */
+  @media (max-width: 700px) {
+    .cartao { text-align: center; align-items: center; }
+    .lema { max-width: 100%; }
+    .divisor { background: linear-gradient(90deg, transparent, var(--mel), transparent); }
+    .acoes { justify-content: center; }
+    .rodape { text-align: center; }
+    .fundo-veu {
+      background: linear-gradient(180deg, rgba(10,6,2,.75), rgba(10,6,2,.55) 45%, rgba(10,6,2,.8));
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .selo-logo, .selo, .marca, .lema, .divisor, .acoes { animation: none; opacity: 1; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="fundo-reserva"></div>
+
+  <video class="fundo-video" autoplay muted loop playsinline preload="auto" poster="mel-poster.jpg" aria-hidden="true">
+    <source src="mel.mp4" type="video/mp4" />
+  </video>
+
+  <div class="fundo-veu"></div>
+
+  <!-- ===================== CONTEÚDO EDITÁVEL ===================== -->
+  <main class="cartao">
+
+    <img class="selo-logo" src="logo.png" alt="Selo Néctar do Rio Preto" width="320" height="322" />
+
+    <!-- EDITE AQUI: linha pequena acima do nome -->
+    <p class="selo">Mel de florada nativa</p>
+
+    <!-- EDITE AQUI: nome da marca -->
+    <h1 class="marca">Néctar<span class="conector">do</span>Rio Preto</h1>
+
+    <!-- EDITE AQUI: frase de apresentação -->
+    <p class="lema">Mel puro, colhido com cuidado e entregue direto da colmeia até a sua mesa.</p>
+
+    <div class="divisor"></div>
+
+    <!-- EDITE AQUI: troque os links de contato -->
+    <nav class="acoes">
+      <a class="botao botao-principal" href="https://wa.me/5531999999999" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.2-1.7-.9-2-1-.3-.1-.5-.1-.7.2-.2.3-.7 1-.9 1.1-.2.2-.3.2-.6.1-.3-.2-1.2-.5-2.4-1.5-.9-.8-1.5-1.8-1.6-2.1-.2-.3 0-.4.1-.6l.5-.5c.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5 0-.2-.7-1.6-.9-2.2-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.2.2 2.1 3.3 5.1 4.6.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.7-.7 1.9-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.6-.3zM12 2A10 10 0 0 0 2 12c0 1.8.5 3.5 1.3 5L2 22l5.2-1.3A10 10 0 1 0 12 2z"/></svg>
+        WhatsApp
+      </a>
+
+      <a class="botao botao-vazado" href="https://instagram.com/seu_perfil" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+        Instagram
+      </a>
+
+      <a class="botao botao-vazado" href="mailto:contato@nectarriopreto.com.br">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+        E-mail
+      </a>
+    </nav>
+  </main>
+
+  <footer class="rodape">
+    © 2026 Néctar do Rio Preto · nectarriopreto.com.br
+  </footer>
+
+</body>
+</html>
